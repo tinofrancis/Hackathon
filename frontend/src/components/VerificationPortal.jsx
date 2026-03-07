@@ -381,38 +381,38 @@ const VerificationPortal = ({ user }) => {
                             {/* BY ID / NAME */}
                             {activeMode === 'id' && (
                                 <motion.div key="id-mode" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}>
-                                    <h3 className="text-xl font-bold mb-2 flex items-center gap-2 text-white">
-                                        <Search className="text-violet-400" size={20} /> Verify by ID, Name, or Code
+                                    <h3 className="text-2xl font-black mb-2 flex items-center gap-3 text-white tracking-tight">
+                                        <BadgeCheck className="text-violet-400" size={24} /> Verify by ID, Name, or Code
                                     </h3>
-                                    <p className="text-slate-400 text-sm mb-8 leading-relaxed">
+                                    <p className="text-slate-400 text-[15px] mb-8 leading-relaxed">
                                         Enter the certificate ID, {user?.role === 'organization' ? 'candidate' : 'student'} name, or any reference code.
                                     </p>
-                                    <form onSubmit={handleIdSubmit} className="space-y-5">
+                                    <form onSubmit={handleIdSubmit} className="space-y-6">
                                         <div className="relative group">
-                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
-                                                <Search size={18} />
+                                            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
+                                                <Fingerprint size={22} />
                                             </div>
-                                            <input className="w-full bg-slate-900 border border-slate-700 group-hover:border-slate-600 rounded-xl py-4 pl-12 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all shadow-sm" placeholder="Certificate ID (e.g. IITB-2023-001)"
+                                            <input className="w-full bg-slate-950/40 border-2 border-slate-800 hover:border-slate-700 rounded-2xl py-5 pl-14 pr-5 text-lg text-violet-100 font-mono tracking-[0.15em] focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all shadow-inner placeholder:text-slate-600 placeholder:font-sans placeholder:tracking-normal placeholder:text-sm" placeholder="CERTIFICATE ID (e.g. IITB-2023-001)"
                                                 value={certId} onChange={e => setCertId(e.target.value)} />
                                         </div>
 
-                                        <div className="flex items-center gap-4 py-1 opacity-70">
-                                            <div className="flex-1 h-px bg-slate-700" />
-                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or search by name</span>
-                                            <div className="flex-1 h-px bg-slate-700" />
+                                        <div className="flex items-center gap-4 py-2 opacity-60">
+                                            <div className="flex-1 h-px bg-gradient-to-r from-transparent to-slate-600" />
+                                            <span className="text-[11px] text-slate-400 font-black uppercase tracking-[0.25em]">or search by name</span>
+                                            <div className="flex-1 h-px bg-gradient-to-l from-transparent to-slate-600" />
                                         </div>
 
                                         <div className="relative group">
-                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
-                                                <User size={18} />
+                                            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
+                                                <Contact size={22} />
                                             </div>
-                                            <input className="w-full bg-slate-900 border border-slate-700 group-hover:border-slate-600 rounded-xl py-4 pl-12 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all shadow-sm" placeholder={`${user?.role === 'organization' ? 'Candidate' : 'Student'} full name (e.g. Rahul Sharma)`}
+                                            <input className="w-full bg-slate-950/40 border-2 border-slate-800 hover:border-slate-700 rounded-2xl py-5 pl-14 pr-5 text-lg text-white font-serif italic tracking-wide focus:outline-none focus:ring-4 focus:ring-violet-500/10 focus:border-violet-500 transition-all shadow-inner placeholder:text-slate-600 placeholder:font-sans placeholder:italic-none placeholder:tracking-normal placeholder:text-sm" placeholder={`${user?.role === 'organization' ? 'Candidate' : 'Student'} full name (e.g. Rahul Sharma)`}
                                                 value={nameInput} onChange={e => setNameInput(e.target.value)} />
                                         </div>
 
                                         <button type="submit" disabled={loading || (!certId.trim() && !nameInput.trim())}
-                                            className="w-full mt-4 bg-violet-600 hover:bg-violet-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold text-[15px] py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm">
-                                            {loading ? <><Loader2 size={18} className="animate-spin" /> Verifying...</> : <><ShieldCheck size={20} /> Verify Certificate</>}
+                                            className="w-full mt-6 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-black text-lg tracking-wide py-5 rounded-2xl flex items-center justify-center gap-3 transition-all shadow-[0_4px_20px_rgba(124,58,237,0.4)] hover:shadow-[0_8px_30px_rgba(124,58,237,0.6)] hover:-translate-y-1">
+                                            {loading ? <><Loader2 size={22} className="animate-spin" /> Verifying Records...</> : <><ShieldCheck size={24} /> Verify Authenticity</>}
                                         </button>
                                     </form>
                                     {scannerDone && (
