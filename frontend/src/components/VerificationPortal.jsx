@@ -523,14 +523,14 @@ const VerificationPortal = ({ user }) => {
                                         <div className="flex items-center gap-2 text-slate-500 text-xs">
                                             <Clock size={14} /> Verified at {new Date().toLocaleTimeString()}
                                         </div>
-                                        <div className="flex gap-3">
+                                        <div className="flex gap-4">
                                             <button onClick={downloadVerificationPDF} disabled={isDownloading}
-                                                className="bg-slate-800 hover:bg-slate-700 text-white text-sm px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                                                {isDownloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+                                                className="bg-white hover:bg-yellow-400 text-black font-black uppercase tracking-widest text-xs px-5 py-2.5 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all flex items-center gap-2">
+                                                {isDownloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
                                                 {isDownloading ? 'Generating...' : 'Download PDF'}
                                             </button>
                                             <button onClick={() => window.open(`https://amoy.polygonscan.com/tx/${result.hash}`, '_blank')}
-                                                className="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white transition-colors text-sm flex items-center gap-2">
+                                                className="bg-white hover:bg-black hover:text-white text-black font-black uppercase tracking-widest text-xs px-5 py-2.5 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all flex items-center gap-2">
                                                 PolygonScan <ExternalLink size={14} />
                                             </button>
                                         </div>
