@@ -160,6 +160,11 @@ const PdfUploader = ({ onExtracted, loading }) => {
                 if (m) { detectedName = m[1].trim(); break; }
             }
 
+            // Fallback to filename if no text found
+            if (!detectedId && !detectedName) {
+                detectedId = file.name.replace(/\.pdf$/i, '').trim();
+            }
+
             const result = { id: detectedId, name: detectedName, rawText: fullText.substring(0, 600) };
             setExtracted(result);
             setExtracting(false);
@@ -170,8 +175,11 @@ const PdfUploader = ({ onExtracted, loading }) => {
                 onExtracted(detectedName, null);
             }
         } catch (err) {
+            // If the PDF library fails (e.g. scanned image, cors worker issue), fallback to using the filename.
+            const fallbackId = file.name.replace(/\.pdf$/i, '').trim();
+            setExtracted({ id: fallbackId, name: null, rawText: '' });
             setExtracting(false);
-            setPdfError('Could not read this PDF. Please try a text-based (not scanned) certificate PDF.');
+            onExtracted(fallbackId, null);
         }
     };
 
