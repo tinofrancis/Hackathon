@@ -380,31 +380,38 @@ const VerificationPortal = ({ user }) => {
                             {/* BY ID / NAME */}
                             {activeMode === 'id' && (
                                 <motion.div key="id-mode" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 16 }}>
-                                    <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
-                                        <Search className="text-violet-400" size={18} /> Verify by ID, Name, or Code
+                                    <h3 className="text-xl font-bold mb-2 flex items-center gap-2 text-white">
+                                        <Search className="text-violet-400" size={20} /> Verify by ID, Name, or Code
                                     </h3>
-                                    <p className="text-slate-400 text-sm mb-6">
+                                    <p className="text-slate-400 text-sm mb-8 leading-relaxed">
                                         Enter the certificate ID, {user?.role === 'organization' ? 'candidate' : 'student'} name, or any reference code.
                                     </p>
-                                    <form onSubmit={handleIdSubmit} className="space-y-4">
-                                        <div className="relative">
-                                            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                                            <input className="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-violet-500 transition-colors" placeholder="Certificate ID (e.g. IITB-2023-001)"
+                                    <form onSubmit={handleIdSubmit} className="space-y-5">
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
+                                                <Search size={18} />
+                                            </div>
+                                            <input className="w-full bg-slate-900 border border-slate-700 group-hover:border-slate-600 rounded-xl py-4 pl-12 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all shadow-sm" placeholder="Certificate ID (e.g. IITB-2023-001)"
                                                 value={certId} onChange={e => setCertId(e.target.value)} />
                                         </div>
-                                        <div className="flex items-center gap-3 py-1">
-                                            <div className="flex-1 h-px bg-slate-800" />
-                                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">or search by name</span>
-                                            <div className="flex-1 h-px bg-slate-800" />
+
+                                        <div className="flex items-center gap-4 py-1 opacity-70">
+                                            <div className="flex-1 h-px bg-slate-700" />
+                                            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">or search by name</span>
+                                            <div className="flex-1 h-px bg-slate-700" />
                                         </div>
-                                        <div className="relative">
-                                            <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
-                                            <input className="w-full bg-slate-900 border border-slate-700 rounded-lg py-3 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-violet-500 transition-colors" placeholder={`${user?.role === 'organization' ? 'Candidate' : 'Student'} full name (e.g. Rahul Sharma)`}
+
+                                        <div className="relative group">
+                                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-violet-400 transition-colors">
+                                                <User size={18} />
+                                            </div>
+                                            <input className="w-full bg-slate-900 border border-slate-700 group-hover:border-slate-600 rounded-xl py-4 pl-12 pr-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all shadow-sm" placeholder={`${user?.role === 'organization' ? 'Candidate' : 'Student'} full name (e.g. Rahul Sharma)`}
                                                 value={nameInput} onChange={e => setNameInput(e.target.value)} />
                                         </div>
+
                                         <button type="submit" disabled={loading || (!certId.trim() && !nameInput.trim())}
-                                            className="w-full mt-2 bg-violet-600 hover:bg-violet-700 disabled:bg-slate-800 disabled:text-slate-500 text-white font-semibold text-sm py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                                            {loading ? <><Loader2 size={16} className="animate-spin" /> Verifying...</> : <><ShieldCheck size={16} /> Verify Certificate</>}
+                                            className="w-full mt-4 bg-violet-600 hover:bg-violet-500 disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed text-white font-bold text-[15px] py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm">
+                                            {loading ? <><Loader2 size={18} className="animate-spin" /> Verifying...</> : <><ShieldCheck size={20} /> Verify Certificate</>}
                                         </button>
                                     </form>
                                     {scannerDone && (
