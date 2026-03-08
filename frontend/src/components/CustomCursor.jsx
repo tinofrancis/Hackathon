@@ -39,34 +39,34 @@ const CustomCursor = () => {
     }, [cursorX, cursorY]);
 
     return (
-        <div className="fixed inset-0 pointer-events-none z-[99999]">
+        <div className="fixed inset-0 pointer-events-none z-[999999]">
             {/* Outer Ring */}
             <motion.div
-                className="absolute top-0 left-0 w-10 h-10 border border-violet-500/40 rounded-full flex items-center justify-center p-2"
+                className="absolute top-0 left-0 w-12 h-12 border-2 border-violet-400/60 rounded-full flex items-center justify-center p-2"
                 style={{
                     translateX: cursorXSpring,
                     translateY: cursorYSpring,
                     x: '-50%',
                     y: '-50%',
-                    scale: isHovering ? 1.5 : (clickEffect ? 0.8 : 1),
-                    backgroundColor: isHovering ? 'rgba(139, 92, 246, 0.1)' : 'transparent',
+                    scale: isHovering ? 1.4 : (clickEffect ? 0.8 : 1),
+                    backgroundColor: isHovering ? 'rgba(139, 92, 246, 0.2)' : 'transparent',
                 }}
             />
             {/* Inner Dot */}
             <motion.div
-                className="absolute top-0 left-0 w-1.5 h-1.5 bg-violet-400 rounded-full"
+                className="absolute top-0 left-0 w-2.5 h-2.5 bg-white shadow-[0_0_10px_rgba(139,92,246,1)] rounded-full"
                 style={{
                     translateX: cursorX,
                     translateY: cursorY,
                     x: '-50%',
                     y: '-50%',
-                    scale: clickEffect ? 2 : 1,
-                    opacity: isHovering ? 0 : 1,
+                    scale: clickEffect ? 1.5 : 1,
+                    opacity: 1,
                 }}
             />
-            {/* Trail effect bubble */}
+            {/* Glow effect */}
             <motion.div
-                className="absolute top-0 left-0 w-4 h-4 bg-violet-500/10 rounded-full blur-md"
+                className="absolute top-0 left-0 w-20 h-20 bg-violet-600/20 rounded-full blur-2xl"
                 style={{
                     translateX: cursorXSpring,
                     translateY: cursorYSpring,

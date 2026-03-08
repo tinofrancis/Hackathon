@@ -58,30 +58,57 @@ const AdminPortal = () => {
         setIsDownloading(false);
     };
 
-    const handleBulkIssueAll = () => {
+    const handleBulkIssueAll = async () => {
         if (bulkData.length === 0) return;
         setIsBulking(true);
 
-        setTimeout(() => {
-            alert(
-                `🔥 BULK ISSUANCE SUCCESSFUL!\n\n` +
-                `1. Generated JSON files for ${bulkData.length} records.\n` +
-                `2. Safely stored all metadata onto the decentralized IPFS network.\n` +
-                `3. Broacasted to Polygon Amoy mapping exact hashes to each student.\n\n` +
-                `Transaction is finalizing!`
-            );
+        const processedResults = [];
+        const newTransactions = [];
 
-            const newTx = {
-                id: "0x" + Math.random().toString(16).substr(2, 8) + "...bulk",
-                student: `Multi-Student (${bulkData.length} records)`,
-                type: "Bulk Issue",
-                status: "Pending",
-                time: "JUST NOW"
-            };
-            setTransactions([newTx, ...transactions]);
-            setIsBulking(false);
+        try {
+            for (const row of bulkData) {
+                // Map fields: name, course, year, pdfLink
+                const name = row.name || row.Name;
+                const course = row.course || row.Course || row.Degree;
+                const year = row.year || row.Year || row.GraduationYear;
+                const pdfLink = row.pdf_link || row.pdfLink || row.PDF;
+
+                if (!name || !course) continue;
+
+                const uniqueKey = "TC-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+                const mockIpfsCID = "bafybeig..." + Math.random().toString(16).substr(2, 8);
+
+                // Save to Backend
+                await axios.post('http://localhost:5000/api/certificates', {
+                    id: uniqueKey,
+                    name,
+                    degree: course,
+                    graduationYear: year,
+                    finalGrade: "A", // Default for bulk if not provided
+                    issuer: account || "0x_Mock_Institution",
+                    ipfsCid: mockIpfsCID,
+                    status: "Confirmed",
+                    fileName: pdfLink ? pdfLink.split('/').pop() : 'bulk_upload.pdf'
+                });
+
+                newTransactions.push({
+                    id: uniqueKey,
+                    student: name,
+                    type: "Bulk Issue",
+                    status: "Confirmed",
+                    time: "JUST NOW"
+                });
+            }
+
+            setTransactions(prev => [...newTransactions, ...prev]);
+            alert(`Successfully issued ${newTransactions.length} bulk certificates!`);
             setBulkData([]);
-        }, 3500);
+        } catch (error) {
+            console.error("Bulk Issuance Error:", error);
+            alert("Error during bulk issuance. Some records might not have been processed.");
+        } finally {
+            setIsBulking(false);
+        }
     };
 
     const handleSingleIssue = async (e) => {
@@ -303,23 +330,28 @@ const AdminPortal = () => {
                                             <thead className="bg-slate-800/50">
                                                 <tr>
                                                     <th className="p-4">Name</th>
-                                                    <th className="p-4">ID</th>
-                                                    <th className="p-4">Degree</th>
-                                                    <th className="p-4">Action</th>
+                                                    <th className="p-4">Course</th>
+                                                    <th className="p-4">Year</th>
+                                                    <th className="p-4">PDF Link</th>
+                                                    <th className="p-4 text-right">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-slate-800">
-                                                {bulkData.slice(0, 5).map((row, i) => (
+                                                {bulkData.slice(0, 10).map((row, i) => (
                                                     <tr key={i} className="hover:bg-slate-700/20">
-                                                        <td className="p-4">{row.Name}</td>
-                                                        <td className="p-4">{row.ID}</td>
-                                                        <td className="p-4">{row.Degree}</td>
-                                                        <td className="p-4">
-                                                            <Trash2
-                                                                size={16}
-                                                                className="text-slate-500 cursor-pointer hover:text-red-400"
+                                                        <td className="p-4 font-bold">{row.name || row.Name}</td>
+                                                        <td className="p-4">{row.course || row.Course || row.Degree}</td>
+                                                        <td className="p-4">{row.year || row.Year}</td>
+                                                        <td className="p-4 text-xs text-slate-500 font-mono truncate max-w-[150px]">
+                                                            {row.pdf_link || row.pdfLink || row.PDF}
+                                                        </td>
+                                                        <td className="p-4 text-right">
+                                                            <button
                                                                 onClick={() => setBulkData(bulkData.filter((_, idx) => idx !== i))}
-                                                            />
+                                                                className="p-2 hover:bg-red-500/10 rounded-lg text-slate-500 hover:text-red-400 transition-colors"
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 ))}

@@ -288,7 +288,7 @@ function App() {
     <AuthProvider>
       <BlockchainProvider>
         <Router>
-          <div className="relative min-h-screen bg-slate-950 text-slate-100 overflow-x-hidden">
+          <div className="relative min-h-screen bg-slate-950 text-slate-100 overflow-x-hidden custom-cursor-active">
             {/* Premium Animated Background */}
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
               <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-600/10 blur-[120px] rounded-full animate-pulse" />
