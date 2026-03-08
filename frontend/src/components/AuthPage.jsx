@@ -210,10 +210,30 @@ const AuthPage = ({ onSuccess }) => {
     const reset = () => { setForm({ name: '', orgName: '', email: '', password: '', confirmPassword: '' }); setError(''); setStep(1); setSelectedType(null); };
 
     const handleLogin = async (e) => {
-        e.preventDefault(); setError(''); setLoading(true);
-        try { const u = await login({ email: form.email, password: form.password }); onSuccess(u); }
-        catch (err) { setError(err.response?.data?.error || 'Invalid email or password. Try the demo buttons below.'); }
+        if (e && e.preventDefault) e.preventDefault();
+        setError(''); setLoading(true);
+        try {
+            console.log("Submitting login for email:", form.email);
+            const u = await login({ email: form.email, password: form.password });
+            console.log("Login successful! User:", u);
+            onSuccess(u);
+        }
+        catch (err) {
+            console.error("Login caught error:", err);
+            setError(err.response?.data?.error || 'Invalid email or password. Try the demo buttons below.');
+        }
         finally { setLoading(false); }
+    };
+
+    const handleDemoLogin = async (email) => {
+        set('email', email);
+        set('password', 'demo1234');
+        setTimeout(() => {
+            const fakeEvent = { preventDefault: () => { } };
+            form.email = email;
+            form.password = 'demo1234';
+            handleLogin(fakeEvent);
+        }, 100);
     };
 
     const handleRegister = async (e) => {
@@ -324,7 +344,7 @@ const AuthPage = ({ onSuccess }) => {
                                         { label: 'Institution', sub: 'IIT Bombay', icon: GraduationCap, color: '#8b5cf6', email: 'admin@iitbombay.edu' },
                                         { label: 'Company', sub: 'Google Inc.', icon: Briefcase, color: '#d946ef', email: 'hr@google.com' },
                                     ].map(({ label, sub, icon: Icon, color, email }) => (
-                                        <button key={email} type="button" onClick={() => { set('email', email); set('password', 'demo1234'); }}
+                                        <button key={email} type="button" onClick={() => handleDemoLogin(email)}
                                             style={{
                                                 padding: '13px 16px', background: 'rgba(15,23,42,0.8)', border: `1px solid ${color}30`,
                                                 borderRadius: 12, cursor: 'pointer', textAlign: 'left', transition: 'all 0.2s',

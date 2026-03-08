@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search, QrCode, ShieldCheck, AlertTriangle, User, Calendar, BookOpen,
     MapPin, Clock, ExternalLink, Activity, X, Download, Database,
-    FileText, Upload, Camera, CheckCircle2, Loader2, ScanLine, RefreshCw, Briefcase
+    FileText, Upload, Camera, CheckCircle2, Loader2, ScanLine, RefreshCw
 } from 'lucide-react';
 import axios from 'axios';
 import { QRCodeSVG } from 'qrcode.react';
@@ -229,7 +229,7 @@ const PdfUploader = ({ onExtracted, loading }) => {
                             </p>
                         </div>
                         <div>
-                            <p className="text-[10px] text-slate-600 uppercase font-bold mb-1">Candidate Name</p>
+                            <p className="text-[10px] text-slate-600 uppercase font-bold mb-1">Student Name</p>
                             <p className={`text-sm font-bold ${extracted.name ? 'text-white' : 'text-slate-600 italic'}`}>
                                 {extracted.name || 'Not detected'}
                             </p>
@@ -250,7 +250,7 @@ const PdfUploader = ({ onExtracted, loading }) => {
 };
 
 /* ΓöÇΓöÇΓöÇ Main Verification Portal ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
-const VerificationPortal = ({ user }) => {
+const VerificationPortal = () => {
     const [activeMode, setActiveMode] = useState('id');
     const [certId, setCertId] = useState('');
     const [nameInput, setNameInput] = useState('');
@@ -347,16 +347,10 @@ const VerificationPortal = ({ user }) => {
             <div className="absolute top-40 right-10 w-80 h-80 bg-fuchsia-600/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="text-center mb-14 relative z-10">
-                {user?.role === 'organization' && (
-                    <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-[10px] font-black tracking-[0.2em] uppercase mb-6">
-                        <Briefcase size={14} /> {user.orgName} Workspace
-                    </motion.div>
-                )}
                 <h2 className="text-4xl md:text-5xl font-black mb-4 tracking-tight">
-                    {user?.role === 'organization' ? 'Employee ' : 'Certificate '}<span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">Verification</span>
+                    Certificate <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">Verification</span>
                 </h2>
-                <p className="text-slate-400 text-lg">Instantly verify {user?.role === 'organization' ? 'candidate credentials' : 'certificates'} by ID, uploaded PDF, or live QR camera scan.</p>
+                <p className="text-slate-400 text-lg">Instantly verify certificates by ID, uploaded PDF, or live QR camera scan.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
@@ -369,9 +363,9 @@ const VerificationPortal = ({ user }) => {
                             const active = activeMode === m.id;
                             return (
                                 <button key={m.id} onClick={() => { setActiveMode(m.id); setScannerDone(false); setResult(null); }}
-                                    className={`flex-1 flex items-center justify-center gap-3 py-4 px-4 rounded-xl text-sm font-bold transition-all duration-300 ${active ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]' : 'text-slate-400 hover:text-white hover:bg-slate-800/50 hover:shadow-inner'}`}>
-                                    <Icon size={18} />
-                                    <span>{m.label}</span>
+                                    className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-3 rounded-xl text-sm font-bold transition-all duration-300 ${active ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]' : 'text-slate-400 hover:text-white hover:bg-slate-800/50 hover:shadow-inner'}`}>
+                                    <Icon size={16} />
+                                    <span className="hidden sm:inline">{m.label}</span>
                                 </button>
                             );
                         })}
@@ -388,30 +382,26 @@ const VerificationPortal = ({ user }) => {
                                         <Search className="text-violet-400" size={18} /> Verify by ID, Name, or Code
                                     </h3>
                                     <p className="text-slate-500 text-xs mb-6">
-                                        Enter the certificate ID (e.g. <span className="text-violet-400 font-mono">IITB-2023-001</span>), {user?.role === 'organization' ? 'candidate' : 'student'} name, or any reference code.
+                                        Enter the certificate ID (e.g. <span className="text-violet-400 font-mono">IITB-2023-001</span>), student name, or any reference code.
                                     </p>
-                                    <form onSubmit={handleIdSubmit} className="flex flex-col gap-8">
-                                        <div className="space-y-3">
-                                            <div className="relative group">
-                                                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-violet-400 transition-colors" />
-                                                <input className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-4 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 transition-all placeholder:text-slate-600" placeholder="Certificate ID (e.g. IITB-2023-001)"
-                                                    value={certId} onChange={e => setCertId(e.target.value)} />
-                                            </div>
+                                    <form onSubmit={handleIdSubmit} className="space-y-4">
+                                        <div className="relative group">
+                                            <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-violet-400 transition-colors" />
+                                            <input className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/50 transition-all placeholder:text-slate-600" placeholder="Certificate ID (e.g. IITB-2023-001)"
+                                                value={certId} onChange={e => setCertId(e.target.value)} />
                                         </div>
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex-1 h-px bg-slate-800" />
-                                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest whitespace-nowrap">or search by name</span>
-                                            <div className="flex-1 h-px bg-slate-800" />
+                                        <div className="flex items-center gap-3 py-1">
+                                            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+                                            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">or search by name</span>
+                                            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
                                         </div>
-                                        <div className="space-y-3">
-                                            <div className="relative group">
-                                                <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-fuchsia-400 transition-colors" />
-                                                <input className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-4 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 transition-all placeholder:text-slate-600" placeholder={`${user?.role === 'organization' ? 'Candidate' : 'Student'} full name (e.g. Rahul Sharma)`}
-                                                    value={nameInput} onChange={e => setNameInput(e.target.value)} />
-                                            </div>
+                                        <div className="relative group">
+                                            <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-fuchsia-400 transition-colors" />
+                                            <input className="w-full bg-slate-900/50 border border-slate-700/50 rounded-xl py-3.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-fuchsia-500/50 focus:ring-1 focus:ring-fuchsia-500/50 transition-all placeholder:text-slate-600" placeholder="Student full name (e.g. Rahul Sharma)"
+                                                value={nameInput} onChange={e => setNameInput(e.target.value)} />
                                         </div>
                                         <button type="submit" disabled={loading || (!certId.trim() && !nameInput.trim())}
-                                            className="w-full mt-4 relative overflow-hidden group bg-gradient-to-r from-violet-600 to-fuchsia-600 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-white font-black uppercase tracking-widest text-sm py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] disabled:shadow-none">
+                                            className="w-full mt-2 relative overflow-hidden group bg-gradient-to-r from-violet-600 to-fuchsia-600 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-500 text-white font-black uppercase tracking-widest text-sm py-4 rounded-xl flex items-center justify-center gap-2 transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] disabled:shadow-none">
                                             {loading ? <><Loader2 size={18} className="animate-spin" /> Verifying...</> : <><ShieldCheck size={18} /> Verify Certificate</>}
                                         </button>
                                     </form>
@@ -475,7 +465,7 @@ const VerificationPortal = ({ user }) => {
                                         <ShieldCheck size={40} className="text-green-400" />
                                     </div>
                                     <div>
-                                        <h3 className="text-2xl font-bold">{user?.role === 'organization' ? 'Background Check Passed ✓' : 'Certificate Authentic ✓'}</h3>
+                                        <h3 className="text-2xl font-bold">Certificate Authentic Γ£ô</h3>
                                         <p className="text-slate-400 text-sm">Legally binding digital record on Polygon blockchain</p>
                                     </div>
                                 </div>
@@ -483,7 +473,7 @@ const VerificationPortal = ({ user }) => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 relative z-10">
                                     <div className="space-y-5">
                                         {[
-                                            { icon: User, label: user?.role === 'organization' ? 'Employee Name' : 'Student Name', value: result.student },
+                                            { icon: User, label: 'Student Name', value: result.student },
                                             { icon: BookOpen, label: 'Degree', value: result.degree, sub: result.grade ? `Grade: ${result.grade}` : null },
                                         ].map(({ icon: Icon, label, value, sub }) => (
                                             <div key={label} className="flex gap-4">
@@ -582,10 +572,10 @@ const VerificationPortal = ({ user }) => {
                         </h4>
                         <div className="space-y-3">
                             {[
-                                { num: '01', text: 'By ID — Enter cert ID from email or document' },
-                                { num: '02', text: `By Name — Enter ${user?.role === 'organization' ? "candidate's" : "student's"} full name` },
-                                { num: '03', text: 'Upload PDF — Drop the certificate PDF file' },
-                                { num: '04', text: 'Scan QR — Use camera to scan the QR code' },
+                                { num: '01', text: 'By ID ΓÇö Enter cert ID from email or document' },
+                                { num: '02', text: "By Name \u2014 Enter student's full name" },
+                                { num: '03', text: 'Upload PDF ΓÇö Drop the certificate PDF file' },
+                                { num: '04', text: 'Scan QR ΓÇö Use camera to scan the QR code' },
                             ].map(({ num, text }) => (
                                 <div key={num} className="flex items-start gap-3">
                                     <span className="text-[9px] font-black text-violet-500 mt-1">{num}</span>

@@ -19,7 +19,7 @@ timeout /t 2 /nobreak >nul
 
 :: Start Frontend
 echo [2/2] Starting Frontend Dev Server on http://localhost:5173 ...
-start "TrustCert Frontend" cmd /k "cd /d %~dp0frontend && npm run dev"
+start "TrustCert Frontend" cmd /k "cd /d %~dp0frontend && npm.cmd run dev"
 
 timeout /t 4 /nobreak >nul
 

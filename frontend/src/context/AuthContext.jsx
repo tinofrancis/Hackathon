@@ -14,9 +14,25 @@ export const AuthProvider = ({ children }) => {
     const [authLoading, setAuthLoading] = useState(true);
 
     useEffect(() => {
-        const saved = localStorage.getItem('trustcert_user');
-        if (saved) { try { setUser(JSON.parse(saved)); } catch { } }
-        setAuthLoading(false);
+        const checkUser = () => {
+            const saved = localStorage.getItem('trustcert_user');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    // Validate role to prevent broken sessions from getting stuck
+                    if (parsed && typeof parsed.role === 'string') {
+                        setUser(parsed);
+                    } else {
+                        localStorage.removeItem('trustcert_user');
+                    }
+                } catch {
+                    localStorage.removeItem('trustcert_user');
+                }
+            }
+            setAuthLoading(false);
+        };
+        // Small delay to allow aggressive caching to clear visually
+        setTimeout(checkUser, 100);
     }, []);
 
     const persist = (userData) => {

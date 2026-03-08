@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Shield, Mail, Twitter, Github, Linkedin, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
@@ -25,19 +26,19 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold mb-6 text-white uppercase text-xs tracking-widest">Platform</h4>
                         <ul className="space-y-4 text-sm text-slate-400">
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">How it Works</a></li>
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">Institutions</a></li>
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">Verification APIs</a></li>
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">Trust Network</a></li>
+                            <li><Link to="/how-it-works" className="hover:text-violet-400 transition-colors">How it Works</Link></li>
+                            <li><Link to="/institutions" className="hover:text-violet-400 transition-colors">Institutions</Link></li>
+                            <li><Link to="/verification-apis" className="hover:text-violet-400 transition-colors">Verification APIs</Link></li>
+                            <li><Link to="/trust-network" className="hover:text-violet-400 transition-colors">Trust Network</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="font-bold mb-6 text-white uppercase text-xs tracking-widest">Resources</h4>
                         <ul className="space-y-4 text-sm text-slate-400">
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">Documentation</a></li>
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">Privacy Policy</a></li>
-                            <li><a href="#" className="hover:text-violet-400 transition-colors">Terms of Service</a></li>
+                            <li><Link to="/documentation" className="hover:text-violet-400 transition-colors">Documentation</Link></li>
+                            <li><Link to="/privacy-policy" className="hover:text-violet-400 transition-colors">Privacy Policy</Link></li>
+                            <li><Link to="/terms-of-service" className="hover:text-violet-400 transition-colors">Terms of Service</Link></li>
                             <li><a href="#" className="hover:text-violet-400 transition-colors text-violet-400 flex items-center gap-1">
                                 Polygon Scan <ExternalLink size={12} />
                             </a></li>
@@ -61,9 +62,9 @@ const Footer = () => {
                         Compliant with IT Act 2000 & GDPR.
                     </p>
                     <div className="flex gap-6 text-xs text-slate-600">
-                        <a href="#" className="hover:text-slate-400">Status</a>
-                        <a href="#" className="hover:text-slate-400">Help Center</a>
-                        <a href="#" className="hover:text-slate-400">Security</a>
+                        <Link to="/status" className="hover:text-slate-400">Status</Link>
+                        <Link to="/help-center" className="hover:text-slate-400">Help Center</Link>
+                        <Link to="/security" className="hover:text-slate-400">Security</Link>
                     </div>
                 </div>
             </div>

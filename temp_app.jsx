@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { Shield, Wallet, Menu, X, ChevronRight, Activity, Globe, LogOut, GraduationCap, Briefcase, BarChart2, Search, Settings, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import Hero from './components/Hero'; // Optionally kept if needed later, but we will use VerificationPortal for root
+import Hero from './components/Hero';
 import AdminPortal from './components/AdminPortal';
 import GraduateWallet from './components/GraduateWallet';
 import VerificationPortal from './components/VerificationPortal';
 import Analytics from './components/Analytics';
 import Footer from './components/Footer';
 import AuthPage from './components/AuthPage';
-import PlaceholderPage from './components/PlaceholderPage';
 import { BlockchainProvider, useBlockchain } from './context/BlockchainContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-// ── Network status bar ────────────────────────────────────────────────────────
+// ΓöÇΓöÇ Network status bar ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const NetworkStatus = () => (
   <div className="bg-violet-600/10 border-b border-violet-500/20 py-2">
     <div className="container mx-auto px-4 flex items-center justify-between text-[10px] uppercase tracking-widest font-bold">
@@ -32,7 +31,7 @@ const NetworkStatus = () => (
   </div>
 );
 
-// ── Navbar ─────────────────────────────────────────────────────────────────────
+// ΓöÇΓöÇ Navbar ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -50,7 +49,7 @@ const Navbar = () => {
     { name: 'Graduate Wallet', path: '/graduate', icon: Wallet },
   ];
 
-  const navLinks = !user ? [{ name: 'Verify', path: '/verify', icon: Search }] : user.role === 'institution' ? institutionLinks : organizationLinks;
+  const navLinks = !user ? [] : user.role === 'institution' ? institutionLinks : organizationLinks;
 
   const handleLogout = () => { logout(); navigate('/'); };
 
@@ -59,7 +58,7 @@ const Navbar = () => {
 
   return (
     <nav className="glass sticky top-4 z-50 mx-4 my-6 py-4 px-8 flex items-center justify-between border-white/5">
-      <Link to="/" className="flex items-center gap-2 group no-underline">
+      <Link to={user ? (user.role === 'institution' ? '/admin' : '/verify') : '/'} className="flex items-center gap-2 group no-underline">
         <div className="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
           <Shield className="text-white" size={24} />
         </div>
@@ -157,7 +156,7 @@ const Navbar = () => {
   );
 };
 
-// ── Role-guarded route ─────────────────────────────────────────────────────────
+// ΓöÇΓöÇ Role-guarded route ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const ProtectedRoute = ({ children, allowedRole }) => {
   const { user, authLoading } = useAuth();
   if (authLoading) return null;
@@ -170,7 +169,7 @@ const ProtectedRoute = ({ children, allowedRole }) => {
   return children;
 };
 
-// ── App Routes ─────────────────────────────────────────────────────────────────
+// ΓöÇΓöÇ App Routes ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 const AppRoutes = () => {
   const { user, authLoading } = useAuth();
   const { account } = useBlockchain();
@@ -188,59 +187,63 @@ const AppRoutes = () => {
   };
 
   return (
-    <Routes>
-      {/* Public */}
-      <Route path="/" element={<Hero />} />
-      <Route path="/verify" element={<VerificationPortal user={user} />} />
-      <Route path="/login" element={user
-        ? <Navigate to={user.role === 'institution' ? '/admin' : '/verify'} replace />
-        : <AuthPage onSuccess={handleAuthSuccess} />}
-      />
+    <>
+      <NetworkStatus />
+      <div className="min-h-screen container mx-auto pb-20">
+        <Navbar />
+        <main className="px-4">
+          <Routes>
+            {/* Public */}
+            <Route path="/" element={user
+              ? <Navigate to={user.role === 'institution' ? '/admin' : '/verify'} replace />
+              : <Hero />}
+            />
+            <Route path="/login" element={user
+              ? <Navigate to={user.role === 'institution' ? '/admin' : '/verify'} replace />
+              : <AuthPage onSuccess={handleAuthSuccess} />}
+            />
 
-      {/* Institution only */}
-      <Route path="/admin" element={
-        <ProtectedRoute allowedRole="institution">
-          <AdminPortal account={account} user={user} />
-        </ProtectedRoute>
-      } />
-      <Route path="/analytics" element={
-        <ProtectedRoute allowedRole="institution">
-          <Analytics />
-        </ProtectedRoute>
-      } />
+            {/* Institution only */}
+            <Route path="/admin" element={
+              <ProtectedRoute allowedRole="institution">
+                <AdminPortal account={account} user={user} />
+              </ProtectedRoute>
+            } />
+            <Route path="/analytics" element={
+              <ProtectedRoute allowedRole="institution">
+                <Analytics />
+              </ProtectedRoute>
+            } />
 
-      {/* Organisation/Graduate only */}
-      <Route path="/graduate" element={
-        <ProtectedRoute allowedRole="organization">
-          <GraduateWallet account={account} />
-        </ProtectedRoute>
-      } />
+            {/* Organisation only */}
+            <Route path="/verify" element={
+              <ProtectedRoute allowedRole="organization">
+                <VerificationPortal user={user} />
+              </ProtectedRoute>
+            } />
+            <Route path="/graduate" element={
+              <ProtectedRoute allowedRole="organization">
+                <GraduateWallet account={account} />
+              </ProtectedRoute>
+            } />
 
-      {/* Placeholder Pages */}
-      {['/how-it-works', '/institutions', '/verification-apis', '/trust-network', '/documentation', '/privacy-policy', '/terms-of-service', '/status', '/help-center', '/security'].map(path => (
-        <Route key={path} path={path} element={<PlaceholderPage />} />
-      ))}
-
-      {/* Catch-all */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+            {/* Catch-all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
+      <Footer />
+    </>
   );
 };
 
-// ── Root App ──────────────────────────────────────────────────────────────────
+// ΓöÇΓöÇ Root App ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
 function App() {
   return (
     <AuthProvider>
       <BlockchainProvider>
         <Router>
-          <NetworkStatus />
-          <div className="min-h-screen container mx-auto pb-20">
-            <Navbar />
-            <main className="px-4">
-              <AppRoutes />
-            </main>
-          </div>
-          <Footer />
+          <AppRoutes />
         </Router>
       </BlockchainProvider>
     </AuthProvider>

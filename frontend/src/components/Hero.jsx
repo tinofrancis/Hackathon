@@ -55,7 +55,7 @@ const Hero = () => {
 
                     <div className="flex flex-wrap justify-center gap-6 mb-20">
                         <button
-                            onClick={() => navigate('/admin')}
+                            onClick={() => navigate('/login')}
                             className="btn btn-primary px-8 py-4 text-lg"
                         >
                             Get Started

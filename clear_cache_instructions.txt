@@ -1,0 +1,19 @@
+/* 
+If your browser is stuck on a black screen when accessing localhost:5173 
+it is because your Google Chrome is aggressively caching the old "Zombie" server's javascript files.
+
+Please do one of the following:
+
+OPTION 1: Hard Refresh (Recommended)
+- Windows/Linux: Press `Ctrl + F5` or `Ctrl + Shift + R`
+- Mac: Press `Cmd + Shift + R`
+
+OPTION 2: Clear Site Data
+1. Right click on the page and select "Inspect" (or press F12)
+2. Go to the "Application" tab at the top of the DevTools window
+3. Click on "Storage" in the left sidebar
+4. Click the "Clear site data" button
+
+OPTION 3: Open an Incognito Window
+- Press `Ctrl + Shift + N` (or `Cmd + Shift + N`) and navigate to http://localhost:5173/verify
+*/

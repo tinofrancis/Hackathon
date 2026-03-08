@@ -43,6 +43,7 @@ const AdminPortal = () => {
     const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
     const [showGeneratedPDF, setShowGeneratedPDF] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
+    const [generatedCert, setGeneratedCert] = useState(null);
 
     const downloadPDF = async () => {
         setIsDownloading(true);
