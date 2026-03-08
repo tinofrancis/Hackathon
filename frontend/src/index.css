@@ -164,6 +164,10 @@ body {
     color: #f87171;
 }
 
+.text-white {
+    color: #ffffff;
+}
+
 .bg-violet-600 {
     background-color: #7c3aed;
 }
