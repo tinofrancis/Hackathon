@@ -39,6 +39,7 @@ const LiveQRScanner = ({ onFound, onClose }) => {
     const scannerInstanceRef = useRef(null);
     const [scannerError, setScannerError] = useState('');
     const [scanning, setScanning] = useState(false);
+    const isScanningRef = useRef(false);
 
     useEffect(() => {
         let mounted = true;
@@ -48,12 +49,10 @@ const LiveQRScanner = ({ onFound, onClose }) => {
                 if (!mounted) return;
                 const scanner = new Html5Qrcode('qr-reader-container');
                 scannerInstanceRef.current = scanner;
-                setScanning(true);
                 await scanner.start(
                     { facingMode: 'environment' },
                     { fps: 10, qrbox: { width: 250, height: 250 } },
                     (decodedText) => {
-                        // QR code found ΓÇö extract ID
                         const id = decodedText.includes('/')
                             ? decodedText.split('/').pop().split('?')[0]
                             : decodedText.trim();
@@ -61,6 +60,10 @@ const LiveQRScanner = ({ onFound, onClose }) => {
                     },
                     () => { } // suppress frame errors
                 );
+                if (mounted) {
+                    setScanning(true);
+                    isScanningRef.current = true;
+                }
             } catch (err) {
                 if (mounted) setScannerError(err.message || 'Camera access denied or not available.');
                 setScanning(false);
@@ -70,8 +73,11 @@ const LiveQRScanner = ({ onFound, onClose }) => {
         return () => {
             mounted = false;
             if (scannerInstanceRef.current) {
-                scannerInstanceRef.current.stop().catch(() => { });
+                if (isScanningRef.current) {
+                    scannerInstanceRef.current.stop().catch(() => { });
+                }
                 scannerInstanceRef.current = null;
+                isScanningRef.current = false;
             }
         };
     }, [onFound]);
