@@ -272,11 +272,6 @@ body {
     animation: fadeIn 0.6s ease forwards;
 }
 
-/* Custom Cursor Logic - Handled by CustomCursor.jsx */
-.custom-cursor-active * {
-    cursor: none !important;
-}
-
 ::selection {
     background: rgba(139, 92, 246, 0.3);
     color: white;
