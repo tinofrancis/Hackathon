@@ -33,6 +33,7 @@ const AdminPortal = () => {
     const { account, contract, connectWallet } = useBlockchain();
     const [activeTab, setActiveTab] = useState('single');
     const [certData, setCertData] = useState({ id: '', name: '', course: '', year: '', grade: '' });
+    const [selectedFile, setSelectedFile] = useState(null);
     const [bulkData, setBulkData] = useState([]);
     const [isIssuing, setIsIssuing] = useState(false);
     const [transactions, setTransactions] = useState([
@@ -85,46 +86,53 @@ const AdminPortal = () => {
 
     const handleSingleIssue = async (e) => {
         e.preventDefault();
+        if (!selectedFile) {
+            alert('Please upload a certificate PDF file.');
+            return;
+        }
         setIsIssuing(true);
 
-        const mockIpfsCID = "bafybeig...zxh4";
+        const mockIpfsCID = "bafybeig..." + Math.random().toString(16).substr(2, 8);
+        const uniqueKey = "TC-" + Math.random().toString(36).substr(2, 9).toUpperCase();
 
         try {
-            // 1. Save data directly to our new Backend Database!
+            // 1. Save data directly to our Backend Database!
             await axios.post('http://localhost:5000/api/certificates', {
-                id: certData.id,
+                id: uniqueKey, // Use generated unique key as ID
                 name: certData.name,
                 degree: certData.course,
                 graduationYear: certData.year,
                 finalGrade: certData.grade,
                 issuer: account || "0x_Mock_Institution",
                 ipfsCid: mockIpfsCID,
-                status: "Pending"
+                status: "Pending",
+                fileName: selectedFile.name
             });
 
             // 2. Complete the Blockchain Simulation (On-Chain Storage)
             const newTx = {
-                id: "0x" + Math.random().toString(16).substr(2, 8) + "...pending",
+                id: uniqueKey,
                 student: certData.name,
-                type: "Single Issue",
-                status: "Pending",
+                type: "Single Issue (PDF)",
+                status: "Confirmed",
                 time: "JUST NOW"
             };
 
             setTransactions([newTx, ...transactions]);
             setIsIssuing(false);
             setCertData({ id: '', name: '', course: '', year: '', grade: '' });
+            setSelectedFile(null);
 
             setGeneratedCert({
-                id: certData.id,
+                id: uniqueKey,
                 name: certData.name,
                 course: certData.course,
                 year: certData.year,
                 grade: certData.grade,
-                hash: newTx.id,
-                ipfsCid: mockIpfsCID
+                hash: "0x" + Math.random().toString(16).substr(2, 40),
+                ipfsCid: mockIpfsCID,
+                fileName: selectedFile.name
             });
-            setShowGeneratedPDF(false); // We now use the inline success box
         } catch (error) {
             console.error("Database Error:", error);
             setIsIssuing(false);
@@ -194,11 +202,39 @@ const AdminPortal = () => {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-sm font-medium text-slate-400">Student ID</label>
-                                        <input
-                                            className="input" placeholder="IITB-2023-001" required
-                                            value={certData.id} onChange={(e) => setCertData({ ...certData, id: e.target.value })}
-                                        />
+                                        <label className="text-sm font-medium text-slate-400">Upload Certificate PDF</label>
+                                        <div className="relative">
+                                            <input
+                                                type="file"
+                                                accept=".pdf"
+                                                className="hidden"
+                                                id="pdf-upload"
+                                                onChange={(e) => setSelectedFile(e.target.files[0])}
+                                            />
+                                            <label
+                                                htmlFor="pdf-upload"
+                                                className="w-full flex items-center gap-3 p-3 bg-slate-900/50 border border-slate-700/50 rounded-xl cursor-pointer hover:border-violet-500/50 transition-all"
+                                            >
+                                                <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-400">
+                                                    <Upload size={18} />
+                                                </div>
+                                                <div className="flex-1 overflow-hidden">
+                                                    <p className="text-xs font-bold text-slate-300 truncate">
+                                                        {selectedFile ? selectedFile.name : 'Choose certificate PDF...'}
+                                                    </p>
+                                                    <p className="text-[10px] text-slate-500 uppercase tracking-widest">
+                                                        {selectedFile ? `${(selectedFile.size / 1024).toFixed(1)} KB` : 'Max size 5MB'}
+                                                    </p>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-sm font-medium text-slate-400">Unique Credential Key</label>
+                                        <div className="flex items-center gap-2 p-3 bg-slate-900/30 border border-slate-800 rounded-xl">
+                                            <Clock size={14} className="text-violet-400" />
+                                            <span className="text-xs font-mono text-slate-500 italic">Will be auto-generated...</span>
+                                        </div>
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-sm font-medium text-slate-400">Course / Degree</label>
@@ -232,15 +268,19 @@ const AdminPortal = () => {
                                 {generatedCert && (
                                     <div className="mt-6 p-6 bg-green-500/10 border border-green-500/30 rounded-2xl flex flex-col items-center text-center">
                                         <CheckCircle2 size={40} className="text-green-400 mb-3" />
-                                        <h3 className="text-xl font-bold text-white mb-2">Certificate Issued Successfully!</h3>
-                                        <p className="text-slate-400 text-sm mb-6">Secured on Polygon blockchain. The official PDF is ready.</p>
+                                        <h3 className="text-xl font-bold text-white mb-2">Certificate Issued!</h3>
+                                        <p className="text-slate-400 text-sm mb-4">
+                                            Credential successfully stored on-chain with key: <span className="text-violet-400 font-mono font-bold">{generatedCert.id}</span>
+                                        </p>
+                                        <div className="flex items-center gap-2 p-3 bg-slate-900/50 border border-slate-800 rounded-xl w-full max-w-sm mb-6">
+                                            <FileText size={16} className="text-violet-400 shrink-0" />
+                                            <p className="text-xs text-slate-300 truncate text-left">{generatedCert.fileName}</p>
+                                        </div>
                                         <button
-                                            onClick={downloadPDF}
-                                            disabled={isDownloading}
-                                            className="btn btn-primary w-full max-w-sm flex items-center justify-center gap-2 py-3"
+                                            onClick={() => setGeneratedCert(null)}
+                                            className="btn btn-secondary w-full max-w-sm py-3"
                                         >
-                                            {isDownloading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                                            {isDownloading ? 'Generating PDF...' : 'Download Certificate PDF'}
+                                            Issue Another
                                         </button>
                                     </div>
                                 )}
@@ -335,46 +375,7 @@ const AdminPortal = () => {
                 </div>
             )}
 
-            {/* HIDDEN TEMPLATE FOR INLINE DOWNLOAD */}
-            {generatedCert && (
-                <div style={{ position: 'fixed', top: '-9999px', left: '-9999px', zIndex: -1 }}>
-                    <div
-                        id="hidden-certificate-preview"
-                        className="bg-slate-900 border-[8px] border-violet-600/30 p-12 relative flex flex-col items-center justify-center text-center overflow-hidden"
-                        style={{ width: '842px', height: '595px' }}
-                    >
-                        <div className="absolute top-0 left-0 w-64 h-64 bg-violet-600/20 blur-[100px] rounded-full mix-blend-screen" />
-                        <div className="absolute bottom-0 right-0 w-64 h-64 bg-fuchsia-600/20 blur-[100px] rounded-full mix-blend-screen" />
-
-                        <div className="flex-1 flex flex-col justify-center items-center relative z-10 w-full">
-                            <h1 className="text-4xl font-black uppercase tracking-widest text-violet-400 mb-8 border-b-2 border-violet-500/30 pb-4 w-full">
-                                TrustCert Authenticated
-                            </h1>
-                            <p className="text-slate-400 text-lg mb-2">This is to certify that</p>
-                            <h2 className="text-6xl font-black text-white mb-6 uppercase">{generatedCert.name}</h2>
-                            <p className="text-slate-400 text-lg mb-2">has successfully completed</p>
-                            <h3 className="text-3xl font-bold text-fuchsia-400 mb-6">{generatedCert.course}</h3>
-                            <div className="flex gap-8 text-center mt-4">
-                                <div><p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Year</p><p className="text-xl font-bold text-white">{generatedCert.year}</p></div>
-                                <div><p className="text-slate-500 text-xs font-bold uppercase tracking-widest">Final Grade</p><p className="text-xl font-bold text-white">{generatedCert.grade}</p></div>
-                            </div>
-                        </div>
-
-                        <div className="w-full flex justify-between items-end border-t border-slate-700/50 pt-6 mt-8 relative z-10">
-                            <div className="text-left text-xs bg-slate-950/50 p-3 rounded-lg border border-slate-800/50 block">
-                                <p className="text-slate-500 font-bold uppercase tracking-widest mb-1">Blockchain Hash / TX</p>
-                                <p className="text-violet-400 font-mono text-[10px] break-all w-64">{generatedCert.hash}</p>
-                                <p className="text-slate-500 font-bold uppercase tracking-widest mt-2 mb-1">IPFS Storage CID</p>
-                                <p className="text-fuchsia-400 font-mono text-[10px] break-all w-64">{generatedCert.ipfsCid}</p>
-                            </div>
-                            <div className="flex flex-col items-center bg-white p-2 rounded-xl">
-                                <QRCodeSVG value={generatedCert.id} size={90} bgColor="#ffffff" fgColor="#0f172a" />
-                                <p className="text-slate-900 font-mono text-[8px] mt-1 font-bold">SCAN TO VERIFY</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {/* Legacy PDF template removed - using PDF upload system */}
 
             <AnimatePresence>
                 {isHistoryModalOpen && (

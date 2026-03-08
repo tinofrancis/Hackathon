@@ -11,6 +11,8 @@ import Analytics from './components/Analytics';
 import Footer from './components/Footer';
 import AuthPage from './components/AuthPage';
 import PlaceholderPage from './components/PlaceholderPage';
+import ErrorBoundary from './components/ErrorBoundary';
+import CustomCursor from './components/CustomCursor';
 import { BlockchainProvider, useBlockchain } from './context/BlockchainContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -175,6 +177,7 @@ const AppRoutes = () => {
   const { user, authLoading } = useAuth();
   const { account } = useBlockchain();
   const navigate = useNavigate();
+  const location = useLocation();
 
   if (authLoading) return (
     <div className="min-h-screen flex items-center justify-center">
@@ -233,14 +236,28 @@ function App() {
     <AuthProvider>
       <BlockchainProvider>
         <Router>
-          <NetworkStatus />
-          <div className="min-h-screen container mx-auto pb-20">
-            <Navbar />
-            <main className="px-4">
-              <AppRoutes />
-            </main>
+          <div className="relative min-h-screen bg-slate-950 text-slate-100 overflow-x-hidden">
+            {/* Premium Animated Background */}
+            <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+              <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-violet-600/10 blur-[120px] rounded-full animate-pulse" />
+              <div className="absolute bottom-[-5%] right-[-5%] w-[35%] h-[35%] bg-fuchsia-600/10 blur-[100px] rounded-full animate-pulse-slow" />
+              <div className="absolute top-[20%] right-[10%] w-[25%] h-[25%] bg-blue-600/5 blur-[80px] rounded-full animate-float" />
+              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none" />
+            </div>
+
+            <CustomCursor />
+            <NetworkStatus />
+
+            <div className="relative z-10 min-h-screen container mx-auto pb-20">
+              <Navbar />
+              <main className="px-4">
+                <ErrorBoundary>
+                  <AppRoutes />
+                </ErrorBoundary>
+              </main>
+            </div>
+            <Footer />
           </div>
-          <Footer />
         </Router>
       </BlockchainProvider>
     </AuthProvider>
