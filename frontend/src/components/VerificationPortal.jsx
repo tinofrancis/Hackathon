@@ -504,14 +504,20 @@ const VerificationPortal = ({ user }) => {
                                     </div>
                                     <div className="space-y-5">
                                         {[
-                                            { icon: MapPin, label: 'Institution', value: result.institution },
+                                            {
+                                                icon: MapPin,
+                                                label: 'Institution',
+                                                value: result.institution.startsWith('0x') && result.institution.length > 20
+                                                    ? `${result.institution.substring(0, 10)}...${result.institution.substring(result.institution.length - 8)}`
+                                                    : result.institution
+                                            },
                                             { icon: Calendar, label: 'Graduation Year', value: result.issued },
                                         ].map(({ icon: Icon, label, value }) => (
                                             <div key={label} className="flex gap-4">
                                                 <Icon className="text-violet-400 shrink-0 mt-0.5" size={18} />
-                                                <div>
+                                                <div className="min-w-0 flex-1">
                                                     <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">{label}</p>
-                                                    <p className="font-bold">{value}</p>
+                                                    <p className="font-bold truncate" title={result.institution}>{value}</p>
                                                 </div>
                                             </div>
                                         ))}
