@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { Shield, Wallet, Menu, X, ChevronRight, Activity, Globe, LogOut, GraduationCap, Briefcase, BarChart2, Search, Settings, User } from 'lucide-react';
+import { Shield, Wallet, Menu, X, ChevronRight, ChevronLeft, Activity, Globe, LogOut, GraduationCap, Briefcase, BarChart2, Search, Settings, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import Hero from './components/Hero'; // Optionally kept if needed later, but we will use VerificationPortal for root

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useBlockchain } from '../context/BlockchainContext';
 
 const TransactionRow = ({ id, student, type, status, time }) => (
     <div className="flex items-center justify-between p-4 rounded-xl bg-slate-900/40 border border-slate-800/50 mb-3 hover:bg-slate-900/60 transition-colors">
@@ -27,7 +28,7 @@ const TransactionRow = ({ id, student, type, status, time }) => (
     </div>
 );
 
-import { useBlockchain } from '../context/BlockchainContext';
+
 
 const AdminPortal = () => {
     const { account, contract, connectWallet } = useBlockchain();
