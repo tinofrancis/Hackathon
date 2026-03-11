@@ -122,8 +122,27 @@ Company logs in → Verify by ID / Upload PDF / Scan QR → Result + Download PD
 ```
 
 ---
-
-## 🛠️ Tech Stack
+ 
+ ## 🚀 Deployment
+ 
+ ### ☁️ Vercel (One-Click)
+ 
+ The project is configured for a unified deployment on **Vercel**.
+ 
+ 1.  Install Vercel CLI: `npm i -g vercel`
+ 2.  Run `vercel` in the root directory.
+ 3.  Set the following **Environment Variables** in the Vercel Dashboard:
+     - `VITE_CONTRACT_ADDRESS`: The deployed `TrustCert` address.
+     - `VITE_API_URL`: Set to `/api` (already defaulted in code).
+ 
+ The `vercel.json` file automatically handles:
+ - Building the React frontend.
+ - Serving the Express backend as Serverless Functions.
+ - API routing under `/api`.
+ 
+ ---
+ 
+ ## 🛠️ Tech Stack
 
 | Layer | Technology |
 |-------|-----------|

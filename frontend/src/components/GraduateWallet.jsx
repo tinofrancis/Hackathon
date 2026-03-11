@@ -5,6 +5,7 @@ import { Share2, Download, Eye, ExternalLink, ShieldCheck, History, Info, Lock, 
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 const HistoryItem = ({ label, date, hash }) => (
     <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/50 mb-2 last:mb-0 hover:border-violet-500/30 transition-colors">
@@ -56,8 +57,9 @@ const GraduateWallet = () => {
 
     const fetchDbCerts = async () => {
         setDbLoading(true);
+        setDbLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5000/api/certificates');
+            const { data } = await axios.get(`${API_BASE}/certificates`);
             const mapped = data.data.map(c => ({
                 id: c.id,
                 name: c.name,

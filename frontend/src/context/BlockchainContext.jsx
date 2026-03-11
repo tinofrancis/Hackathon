@@ -1,11 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ethers } from 'ethers';
+import { CONTRACT_ADDRESS, POLYGON_AMOY_CHAIN_ID } from '../config';
 
 const BlockchainContext = createContext();
 
-// NOTE: You will need to replace this with your actual contract address after deploying
-const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000";
-const POLYGON_AMOY_CHAIN_ID = "0x13882"; // 80002 in hex
+// Removed hardcoded address and chainId, using config.js instead
 
 // Simplified ABI for the basic read/write functions we need
 const CONTRACT_ABI = [

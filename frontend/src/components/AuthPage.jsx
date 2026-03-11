@@ -327,7 +327,7 @@ const AuthPage = ({ onSuccess }) => {
                                 {error && (
                                     <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
                                         style={{ padding: '12px 16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, color: '#f87171', fontSize: 13, marginBottom: 16 }}>
-                                        {error}
+                                        {typeof error === 'object' ? (error?.message || JSON.stringify(error)) : error}
                                     </motion.div>
                                 )}
 

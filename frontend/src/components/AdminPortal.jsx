@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, Plus, FileText, Trash2, Send, Save, AlertCircle, Clock, CheckCircle2, Loader2, X } from 'lucide-react';
 import Papa from 'papaparse';
 import axios from 'axios';
+import { API_BASE } from '../config';
 import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -80,7 +81,7 @@ const AdminPortal = () => {
                 const mockIpfsCID = "bafybeig..." + Math.random().toString(16).substr(2, 8);
 
                 // Save to Backend
-                await axios.post('http://localhost:5000/api/certificates', {
+                await axios.post(`${API_BASE}/certificates`, {
                     id: uniqueKey,
                     name,
                     degree: course,
@@ -125,7 +126,7 @@ const AdminPortal = () => {
 
         try {
             // 1. Save data directly to our Backend Database!
-            await axios.post('http://localhost:5000/api/certificates', {
+            await axios.post(`${API_BASE}/certificates`, {
                 id: uniqueKey, // Use generated unique key as ID
                 name: certData.name,
                 degree: certData.course,

@@ -9,6 +9,7 @@ import axios from 'axios';
 import { QRCodeSVG } from 'qrcode.react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { API_BASE } from '../config';
 
 /* ΓöÇΓöÇΓöÇ Verification mode tabs ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
 const MODES = [
@@ -103,7 +104,9 @@ const LiveQRScanner = ({ onFound, onClose }) => {
                 <div className="w-full p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-center">
                     <AlertTriangle size={32} className="text-red-400 mx-auto mb-2" />
                     <p className="text-red-400 text-sm font-bold mb-1">Camera Unavailable</p>
-                    <p className="text-slate-500 text-xs">{scannerError}</p>
+                    <p className={typeof scannerError === 'object' ? "text-slate-600 text-[10px] break-all" : "text-slate-500 text-xs"}>
+                        {typeof scannerError === 'object' ? (scannerError?.message || JSON.stringify(scannerError)) : scannerError}
+                    </p>
                     <p className="text-slate-600 text-xs mt-2">Use the "By ID" tab or "Upload PDF" instead.</p>
                 </div>
             ) : !scanning ? (
@@ -219,7 +222,7 @@ const PdfUploader = ({ onExtracted, loading }) => {
 
             {pdfError && (
                 <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
-                    <AlertTriangle size={14} /> {pdfError}
+                    <AlertTriangle size={14} /> {typeof pdfError === 'object' ? (pdfError?.message || JSON.stringify(pdfError)) : pdfError}
                 </div>
             )}
 
@@ -276,7 +279,7 @@ const VerificationPortal = ({ user }) => {
         setLoading(true);
         setResult(null);
         try {
-            const { data } = await axios.get(`http://localhost:5000/api/certificates/${encodeURIComponent(id)}`);
+            const { data } = await axios.get(`${API_BASE}/certificates/${encodeURIComponent(id)}`);
             const cert = data.data;
             setResult({
                 status: 'authentic', fromDB: true,

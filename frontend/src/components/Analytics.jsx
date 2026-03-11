@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { Search, Eye, ShieldAlert, TrendingUp, RefreshCw, Award, CheckCircle2, Clock } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 const COLORS = ['#8b5cf6', '#d946ef', '#a78bfa', '#e879f9'];
 
@@ -26,7 +27,7 @@ const Analytics = () => {
     const fetchStats = async () => {
         setLoading(true);
         try {
-            const { data } = await axios.get('http://localhost:5000/api/stats');
+            const { data } = await axios.get(`${API_BASE}/stats`);
             setStats(data);
         } catch {
             // Fallback to mock data if backend is not running

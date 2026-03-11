@@ -12,15 +12,43 @@ app.use(cors());
 app.use(express.json());
 
 // ── DB Helpers ────────────────────────────────────────────────────────────────
+let memDB = null; // In-memory fallback for read-only Vercel environment
+
 const readDB = () => {
-    if (!fs.existsSync(DB_FILE)) {
-        const init = { users: [], certificates: [], verifications: [] };
-        fs.writeFileSync(DB_FILE, JSON.stringify(init, null, 2));
-        return init;
+    try {
+        if (memDB) return memDB;
+        if (!fs.existsSync(DB_FILE)) {
+            const init = { users: [], certificates: [], verifications: [] };
+            try {
+                fs.writeFileSync(DB_FILE, JSON.stringify(init, null, 2));
+            } catch (e) {
+                console.log("⚠️ DB Write failed (Read-Only FS). Using In-Memory fallback.");
+                memDB = init;
+                return memDB;
+            }
+            return init;
+        }
+        return JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+    } catch (err) {
+        console.log("⚠️ DB Read failed. Using In-Memory fallback.");
+        if (!memDB) memDB = { users: [], certificates: [], verifications: [] };
+        return memDB;
     }
-    return JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
 };
-const writeDB = (data) => fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+
+const writeDB = (data) => {
+    try {
+        if (memDB) {
+            memDB = data;
+            return;
+        }
+        fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+    } catch (err) {
+        console.log("⚠️ DB Write failed. Switching to In-Memory fallback.");
+        memDB = data;
+    }
+};
+
 const hashPassword = (pw) => crypto.createHash('sha256').update(pw).digest('hex');
 
 // ── Seed demo accounts if not already present ─────────────────────────────────
@@ -203,9 +231,13 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 TrustCert API running on http://localhost:${PORT}`);
-    console.log(`\n📋 Demo Accounts:`);
-    console.log(`   Institution: admin@iitbombay.edu / demo1234`);
-    console.log(`   Company:     hr@google.com / demo1234\n`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(PORT, () => {
+        console.log(`\n🚀 TrustCert API running on http://localhost:${PORT}`);
+        console.log(`\n📋 Demo Accounts:`);
+        console.log(`   Institution: admin@iitbombay.edu / demo1234`);
+        console.log(`   Company:     hr@google.com / demo1234\n`);
+    });
+}
+
+module.exports = app;

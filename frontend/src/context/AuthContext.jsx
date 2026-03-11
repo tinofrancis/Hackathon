@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE } from '../config';
 
 const AuthContext = createContext();
 
@@ -42,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const register = async ({ name, orgName, orgType, email, password }) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/register', { name, orgName, orgType, email, password }, { timeout: 4000 });
+            const { data } = await axios.post(`${API_BASE}/auth/register`, { name, orgName, orgType, email, password }, { timeout: 4000 });
             persist(data.user);
             return data.user;
         } catch (err) {
@@ -58,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async ({ email, password }) => {
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password }, { timeout: 4000 });
+            const { data } = await axios.post(`${API_BASE}/auth/login`, { email, password }, { timeout: 4000 });
             persist(data.user);
             return data.user;
         } catch (err) {
