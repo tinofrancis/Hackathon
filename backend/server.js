@@ -148,6 +148,7 @@ app.post('/api/certificates', (req, res) => {
 
     const newCert = {
         id, name, degree, graduationYear, finalGrade, issuer, ipfsCid,
+        fileName: req.body.fileName || '',
         status: status || 'Confirmed',
         timestamp: new Date().toISOString()
     };
@@ -171,7 +172,8 @@ app.get('/api/certificates/:id', (req, res) => {
     const searchQuery = req.params.id.toLowerCase();
     const cert = db.certificates.find(c =>
         (c.id && c.id.toLowerCase() === searchQuery) ||
-        (c.name && c.name.toLowerCase() === searchQuery)
+        (c.name && c.name.toLowerCase() === searchQuery) ||
+        (c.fileName && c.fileName.toLowerCase() === searchQuery)
     );
 
     if (!cert) return res.status(404).json({ error: "Certificate not found." });

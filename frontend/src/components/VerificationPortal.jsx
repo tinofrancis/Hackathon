@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Search, QrCode, ShieldCheck, AlertTriangle, User, Calendar, BookOpen,
@@ -149,10 +149,11 @@ const PdfUploader = ({ onExtracted, loading }) => {
 
             // Smart extraction patterns
             const idPatterns = [
-                /(?:Certificate\s*ID|Cert\s*ID|ID)[:\s#]+([A-Z0-9\-]{4,30})/i,
+                /(?:Certificate\s*ID|Cert\s*ID|ID|Key)[:\s#]+([A-Z0-9\-]{4,30})/i,
                 /(?:Certificate\s*No|Cert\s*No|No\.?)[:\s#]+([A-Z0-9\-]{4,30})/i,
+                /(TC-[A-Z0-9]{6,15})/,
                 /([A-Z]{2,8}-\d{4}-\d{2,6})/,
-                /([A-Z]{2,8}-0[Xx][0-9A-Fa-f]{4,12})/,
+                /(\d{6,15})/, 
             ];
             const namePatterns = [
                 /(?:This is to certify that|awarded to|certify that)[:\s]+([A-Z][a-z]+(?: [A-Z][a-z]+){1,3})/i,
@@ -245,7 +246,14 @@ const PdfUploader = ({ onExtracted, loading }) => {
                         </div>
                     </div>
                     {!extracted.id && !extracted.name && (
-                        <p className="text-slate-500 text-xs">Could not auto-detect fields. Please copy the ID from the PDF and use "By ID" tab.</p>
+                        <div className="p-3 rounded-lg bg-violet-500/10 border border-violet-500/20">
+                            <p className="text-violet-400 text-xs font-bold mb-1 flex items-center gap-1">
+                                <Activity size={12} /> Filename Verification Mode
+                            </p>
+                            <p className="text-slate-400 text-[10px]">
+                                Could not find a Cert ID in text. Verifying by filename: <span className="text-white font-mono">{file.name}</span>
+                            </p>
+                        </div>
                     )}
                     {(extracted.id || extracted.name) && (
                         <div className="flex items-center gap-2 text-green-400 text-xs font-bold">

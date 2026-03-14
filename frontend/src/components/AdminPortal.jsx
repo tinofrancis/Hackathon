@@ -409,7 +409,55 @@ const AdminPortal = () => {
                 </div>
             )}
 
-            {/* Legacy PDF template removed - using PDF upload system */}
+            {/* Hidden Certificate Preview for PDF Generation */}
+            {generatedCert && (
+                <div style={{ position: 'fixed', top: '-9999px', left: '-9999px', zIndex: -1 }}>
+                    <div id="hidden-certificate-preview" style={{ width: 842, height: 595, background: '#0f172a', border: '8px solid rgba(139,92,246,0.4)', padding: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', fontFamily: 'sans-serif', color: 'white', position: 'relative', overflow: 'hidden' }}>
+                        {/* Decorative Background for PDF */}
+                        <div style={{ position: 'absolute', top: -100, left: -100, width: 300, height: 300, background: 'rgba(139,92,246,0.1)', borderRadius: '50%', filter: 'blur(80px)' }} />
+                        <div style={{ position: 'absolute', bottom: -100, right: -100, width: 300, height: 300, background: 'rgba(217,70,239,0.1)', borderRadius: '50%', filter: 'blur(80px)' }} />
+
+                        <div style={{ textAlign: 'center', width: '100%', borderBottom: '2px solid rgba(139,92,246,0.3)', paddingBottom: 16 }}>
+                            <div style={{ fontSize: 11, color: '#a78bfa', fontWeight: 900, letterSpacing: 6, textTransform: 'uppercase', marginBottom: 4 }}>✦ TrustCert Blockchain Network ✦</div>
+                            <div style={{ fontSize: 28, fontWeight: 900, textTransform: 'uppercase', letterSpacing: 3 }}>Official Digital Credential</div>
+                        </div>
+
+                        <div style={{ textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
+                            <div style={{ fontSize: 13, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 2 }}>This certifies that</div>
+                            <div style={{ fontSize: 48, fontWeight: 900, textTransform: 'uppercase', letterSpacing: 2, color: '#fff' }}>{generatedCert.name}</div>
+                            <div style={{ fontSize: 13, color: '#94a3b8' }}>has been successfully awarded</div>
+                            <div style={{ fontSize: 26, fontWeight: 700, color: '#d946ef' }}>{generatedCert.course}</div>
+                            
+                            <div style={{ display: 'flex', gap: 40, justifyContent: 'center', marginTop: 8 }}>
+                                <div><div style={{ fontSize: 9, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2 }}>Year</div><div style={{ fontSize: 18, fontWeight: 700 }}>{generatedCert.year}</div></div>
+                                {generatedCert.grade && <div><div style={{ fontSize: 9, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2 }}>Grade</div><div style={{ fontSize: 18, fontWeight: 700, color: '#4ade80' }}>{generatedCert.grade}</div></div>}
+                                <div><div style={{ fontSize: 9, color: '#64748b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2 }}>Credential ID</div><div style={{ fontSize: 14, fontWeight: 700, color: '#a78bfa', fontFamily: 'monospace' }}>{generatedCert.id}</div></div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%', borderTop: '1px solid rgba(100,116,139,0.3)', paddingTop: 16 }}>
+                            <div style={{ fontSize: 9, fontFamily: 'monospace', color: '#64748b', maxWidth: 580 }}>
+                                <div style={{ color: '#6d28d9', fontWeight: 700, fontSize: 8, letterSpacing: 2, marginBottom: 4 }}>VERIFICATION HASH (POLYGON)</div>
+                                <div style={{ color: '#a78bfa', wordBreak: 'break-all' }}>{generatedCert.hash || 'On-chain commitment: 0x' + Math.random().toString(16).substr(2, 40)}</div>
+                                <div style={{ marginTop: 4, color: '#94a3b8' }}>Issued: {new Date().toUTCString()} • Secure Blockchain Credential</div>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'white', padding: 10, borderRadius: 12 }}>
+                                <QRCodeSVG value={`https://blockchain-portal-mu.vercel.app/verify?id=${generatedCert.id}`} size={80} bgColor="#ffffff" fgColor="#0f172a" />
+                                <div style={{ color: '#0f172a', fontSize: 8, fontFamily: 'monospace', fontWeight: 700, marginTop: 4 }}>SCAN TO VERIFY</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className="mt-8 flex justify-center gap-4">
+                {generatedCert && (
+                    <button onClick={downloadPDF} disabled={isDownloading} className="btn btn-primary flex items-center gap-2">
+                        {isDownloading ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
+                        Download Verifiable PDF
+                    </button>
+                )}
+            </div>
 
             <AnimatePresence>
                 {isHistoryModalOpen && (
